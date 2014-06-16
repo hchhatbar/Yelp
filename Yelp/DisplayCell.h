@@ -10,10 +10,15 @@
 
 @interface DisplayCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *thumbView;
+@property (weak, nonatomic) IBOutlet UIImageView *ratingView;
+
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 
 @property (weak, nonatomic) IBOutlet UILabel *typeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *mileLabel;
+@property (weak, nonatomic) IBOutlet UILabel *reviewCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
+
 
 @end

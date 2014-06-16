@@ -15,12 +15,21 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+
+  
+    ListViewController *listViewController = [[ListViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:listViewController];
+  
+    //navigationController.navigationBar.backgroundColor = [UIColor redColor];
+    navigationController.navigationBar.barTintColor = [UIColor redColor];
     
-    self.window.rootViewController = [[ListViewController alloc] init];
+    self.window.rootViewController = navigationController; //[[ListViewController alloc] init];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
