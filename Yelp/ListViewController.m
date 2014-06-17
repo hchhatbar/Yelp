@@ -11,6 +11,7 @@
 #import "DisplayCell.h"
 #import "YelpModel.h"
 #import <UIImageView+AFNetworking.h>
+#import "FilterViewController.h"
 
 NSString * const kYelpConsumerKey = @"vxKwwcR_NMQ7WaEiQBK_CA";
 NSString * const kYelpConsumerSecret = @"33QCvh5bIF5jIHR5klQr7RtBDhQ";
@@ -75,8 +76,19 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     
 
 
-- (void)testAction: (id) sender {
-    NSLog(@"%@", @"test btn");
+- (void)filterClickEvent: (id) sender {
+    NSLog(@"%@", @"Filter Pressed");
+    
+    
+    //navigationController.navigationBar.barTintColor = [UIColor redColor];
+
+    FilterViewController *filterViewController = [[FilterViewController alloc] init];
+    
+    UINavigationController *filterNavigationController = [[UINavigationController alloc] initWithRootViewController:filterViewController];
+    filterNavigationController.navigationBar.barTintColor = [UIColor redColor];
+    filterViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentViewController:filterNavigationController animated:YES completion: nil];
+     
 }
 
 - (void)addFilterAndSearchBox
@@ -102,6 +114,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     [button setTitle:@"Filter" forState:UIControlStateNormal];
     [button setTintColor:[UIColor redColor]];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(filterClickEvent:) forControlEvents:UIControlEventTouchUpInside];
     button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     button.layer.borderColor = [UIColor whiteColor].CGColor;
     button.layer.borderWidth = 1.0f;
@@ -141,7 +154,8 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+        return self.businesses.count;
+
 }
 
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
