@@ -11,7 +11,8 @@
 @interface FilterViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *filterTableView;
 @property (nonatomic,strong) NSMutableDictionary * collapsed;
-
+@property NSUserDefaults *defaults;
+@property NSIndexPath* checkedIndexPath;
 - (UILabel *) newLabelWithTitle:(NSString *)paramTitle;
 
 @end
@@ -26,6 +27,8 @@
         // Custom initialization
         self.collapsed = [NSMutableDictionary dictionary];
     }
+    
+    self.defaults = [NSUserDefaults standardUserDefaults];
     return self;
 }
 
@@ -45,16 +48,29 @@
     
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [button setFrame:CGRectMake(10,20,50,40)];
+    [button setFrame:CGRectMake(10,20,60,40)];
     [button setTitle:@"Cancel" forState:UIControlStateNormal];
     [button setTintColor:[UIColor redColor]];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(cancelClickEvent:) forControlEvents:UIControlEventTouchUpInside];
     button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    button.layer.borderColor = [UIColor whiteColor].CGColor;
+    button.layer.borderColor = [UIColor clearColor].CGColor;
     button.layer.borderWidth = 1.0f;
     button.layer.cornerRadius = 4.0f;
     [self.navigationController.view addSubview:button];
+    
+    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [searchButton setFrame:CGRectMake(250,20,60,40)];
+    [searchButton setTitle:@"Search" forState:UIControlStateNormal];
+    [searchButton setTintColor:[UIColor redColor]];
+    [searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(cancelClickEvent:) forControlEvents:UIControlEventTouchUpInside];
+    searchButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    searchButton.layer.borderColor = [UIColor clearColor].CGColor;
+    searchButton.layer.borderWidth = 1.0f;
+    searchButton.layer.cornerRadius = 4.0f;
+    [self.navigationController.view addSubview:searchButton];
+
     
 }
 
@@ -74,7 +90,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     
-    return 6;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -82,33 +98,93 @@
         
        return  [self.collapsed[@(section)] boolValue] ? 1 : 2;
     }
-    else
+    else if (section == 1)
     {
-    return [self.collapsed[@(section)] boolValue] ? 1 : 3;
+        return [self.collapsed[@(section)] boolValue] ? 1 : 5;
     }
-
+    else if (section == 2)
+    {
+        return [self.collapsed[@(section)] boolValue] ? 1 : 3;
+    }
+    else if (section == 3)
+    {
+        return [self.collapsed[@(section)] boolValue] ? 1 : 1;
+    }
+    else if (section == 4)
+    {
+        return [self.collapsed[@(section)] boolValue] ? 1 : 1;
+    }
+    else return 1;
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     if(indexPath.section == 0)
     {
-            cell.textLabel.text = @"Most Popular";
+        if(indexPath.row == 0)
+            cell.textLabel.text = @"Offering a Deal";
+        else cell.textLabel.text = @"Delivery";
+    
+    
             UISwitch *switchControl = [[UISwitch alloc] initWithFrame:CGRectMake(250,5,50,50)];
+            switchControl.onTintColor = [UIColor redColor];
             [cell.contentView addSubview:switchControl];
     }
-    else
+    else if (indexPath.section == 1)
     {
-    cell.textLabel.text = [NSString stringWithFormat:@"%d - %d", indexPath.section, indexPath.row];
+        if(indexPath.row == 0)
+            cell.textLabel.text = @"Auto";
+        else if(indexPath.row == 1)
+            cell.textLabel.text = @"0.3";
+        else if(indexPath.row == 2)
+            cell.textLabel.text = @"1";
+         else  if(indexPath.row == 3)
+             cell.textLabel.text = @"5";
+         else  if(indexPath.row == 4)
+             cell.textLabel.text = @"20";
+
+
     }
+    else if (indexPath.section == 2)
+    {
+        if(indexPath.row == 0)
+            cell.textLabel.text = @"Best Match";
+        else if(indexPath.row == 1)
+            cell.textLabel.text = @"Distance";
+        else if(indexPath.row == 2)
+            cell.textLabel.text = @"Highest Rated";
+    }
+
+    //else if(indexPath.section == 3)
+    //{
+    //    cell.textLabel.text = @"Deals";
+    //
+    //    UISwitch *switchControl = [[UISwitch alloc] initWithFrame:CGRectMake(250,5,50,50)];
+    //    switchControl.onTintColor = [UIColor redColor];
+    //    [cell.contentView addSubview:switchControl];
+    //}
+    
+    else if(indexPath.section == 3)
+    {
+        cell.textLabel.text = @"Meters";
+  
+    }
+    
+    //else
+    //{
+    //cell.textLabel.text = [NSString stringWithFormat:@"%d - %d", indexPath.section, indexPath.row];
+    //}
     return cell;
 }
 
 - (UILabel *) newLabelWithTitle:(NSString *)paramTitle{
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    
     label.text = paramTitle;
     label.backgroundColor = [UIColor clearColor];
+    label.frame = CGRectMake(5,25,100,50);
     [label sizeToFit];
     return label;
 }
@@ -118,52 +194,117 @@
     
     NSString *sectionTitle;
     if(section == 0){
-        sectionTitle = @"Price";
-    }
-    else if (section == 1)
-    {
         sectionTitle = @"Most Popular";
     }
-    else if (section == 2)
+        else if (section == 1)
     {
         sectionTitle = @"Distance";
     }
-    else if (section == 3)
+    else if (section == 2)
     {
         sectionTitle = @"Sort By";
     }
-    else if (section == 4)
-    {
-        sectionTitle = @"Deals";
-    }
-    else if (section == 5)
+    else if (section == 3)
     {
         sectionTitle = @"Radius";
     }
+//    else if (section == 4)
+//    {
+//        sectionTitle = @"Radius";
+//    }
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,50)];
-    view.backgroundColor = [UIColor grayColor];
+    view.backgroundColor = [UIColor lightGrayColor];
     
     [view addSubview:[self newLabelWithTitle:(sectionTitle)]];
     return view;
 }
 
-//- (NSString*) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger)section
-//{
-//    return @"Most P";
-//}
 
 - (float)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     
     return 50;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    //int section = indexPath.section;
-    self.collapsed[@(indexPath.section)] = @(![self.collapsed[@(indexPath.section)] boolValue]);
-    
-    [self.filterTableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]withRowAnimation:UITableViewRowAnimationAutomatic];
-      
-      //[self.filterTableView reloadData];
+
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSUInteger index = [[tableView indexPathsForVisibleRows] indexOfObject:indexPath];
+    if (index != NSNotFound) {
+        UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
+    }
+}
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+        NSUInteger index = [[tableView indexPathsForVisibleRows] indexOfObject:indexPath];
+        
+    NSLog(@"%d", indexPath.section);
+    if(indexPath.section == 1)
+    {
+        //if (index != NSNotFound) {
+            UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
+        //UILabel *textfield = [cell.contentView viewW viewWithTag:@"Distance"];
+        
+        
+        NSLog(@"%@",cell.textLabel.text);
+        [self.defaults setValue:cell.textLabel.text forKey:@"radius_filter"];
+        
+            if ([cell accessoryType] == UITableViewCellAccessoryNone) {
+                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+            } else {
+                [cell setAccessoryType:UITableViewCellAccessoryNone];
+            }
+        //}
+        //return cell;
+    }
+        
+        if(indexPath.section == 2)
+        {
+            //if (index != NSNotFound) {
+                UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
+                    NSLog(@"%@",cell.textLabel.text);
+            if([cell.textLabel.text  isEqual: @"Best Match"]){
+                [self.defaults setValue:@"0" forKey:@"sort"];
+                
+            }
+
+            else if ([cell.textLabel.text  isEqual: @"Distance"]){
+                
+                NSLog(@"got distance");
+                [self.defaults setValue:@"1" forKey:@"sort"];
+            }
+        
+            else if ([cell.textLabel.text  isEqual: @"Highest Rated"]){
+                NSLog(@"got highest");
+                [self.defaults setValue:@"2" forKey:@"sort"];
+                
+            }
+            
+                if ([cell accessoryType] == UITableViewCellAccessoryNone) {
+                    [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                } else {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                }
+            //}
+            //return cell;
+        }
+
+        if(indexPath.section == 3)
+        {
+            //if (index != NSNotFound) {
+                UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
+                if ([cell accessoryType] == UITableViewCellAccessoryNone) {
+                    [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                } else {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                }
+            //}
+            //return cell;
+        }
+
 }
 @end
+
+//NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//[defaults setValue:@"My saved Data" forKey:@"infoString"];

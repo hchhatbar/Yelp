@@ -25,7 +25,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 @property (weak, nonatomic) IBOutlet UITableView *displayView;
 @property (nonatomic, strong) UITextField *searchBox;
 @property YelpModel *yelpModel;
-
+@property NSUserDefaults *defaults;
 - (void)getBusinesses:(NSString *)searchTerm;
 @end
 
@@ -51,7 +51,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
             NSLog(@"error: %@", [error description]);
         }];
     }
-
+    self.defaults = [NSUserDefaults standardUserDefaults];
     return self;
     
 }
@@ -138,6 +138,25 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     
     [self.displayView setDelegate:self];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    
+    NSLog(@"view will appear");
+
+    [self.client searchWithTerm:@"Thai" success:^(AFHTTPRequestOperation *operation, id response) {
+        
+        
+        self.businesses = response[@"businesses"];
+        NSLog(@"%@", self.businesses[1]);
+        [self.displayView reloadData];
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error: %@", [error description]);
+    }];
+
+  
+   
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

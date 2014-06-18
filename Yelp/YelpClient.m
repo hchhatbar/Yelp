@@ -25,7 +25,36 @@
     // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
     NSDictionary *parameters = @{@"term": term, @"location" : @"San Francisco"};
     
-    return [self GET:@"search" parameters:parameters success:success failure:failure];
+    
+    NSMutableDictionary * parametersDict = [[NSMutableDictionary alloc]initWithDictionary:parameters];
+    
+    //[parameters setValue:@"Sunnyvale" forKey:@"location"];
+    //[parameters setValue:term forKey:@"term"];
+    //[parameters setValue:@"San Francisco" forKey:@"location"];
+    
+    
+    NSString* radius_filter = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
+    NSString* sort = [[NSUserDefaults standardUserDefaults] objectForKey:@"sort"];
+    NSLog(@"ns user def");
+    NSLog(@"%@", radius_filter);
+    if(sort != nil){
+        parametersDict[@"sort"] =  [NSString stringWithFormat:@"%@", sort ];
+    
+    }
+    
+    //if(radius_filter != nil){
+    //    parametersDict[@"radius_filter"] =  [NSString stringWithFormat:@"%@", radius_filter ];
+        
+    //}
+    
+    //if(sort !=nil)
+    //    [parameters setValue:@"2" forKey:@"sort"];
+//    [parameters setValue:@"San Francisco" forKey:@"location"];
+   // NSDictionary *str =  [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+    
+    return [self GET:@"search" parameters:parametersDict success:success failure:failure];
 }
+
+
 
 @end
