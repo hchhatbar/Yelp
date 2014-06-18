@@ -116,7 +116,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(filterClickEvent:) forControlEvents:UIControlEventTouchUpInside];
     button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    button.layer.borderColor = [UIColor whiteColor].CGColor;
+    button.layer.borderColor = [UIColor clearColor].CGColor;
     button.layer.borderWidth = 1.0f;
     button.layer.cornerRadius = 4.0f;
     [self.navigationController.view addSubview:button];
