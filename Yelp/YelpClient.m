@@ -23,34 +23,31 @@
 - (AFHTTPRequestOperation *)searchWithTerm:(NSString *)term success:(void (^)(AFHTTPRequestOperation *operation, id response))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
     // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
-    NSDictionary *parameters = @{@"term": term, @"location" : @"San Francisco"};
+    NSDictionary *parameters = @{@"term": term}; //, @"location" : @"San Francisco"};
     
     
     NSMutableDictionary * parametersDict = [[NSMutableDictionary alloc]initWithDictionary:parameters];
     
-    //[parameters setValue:@"Sunnyvale" forKey:@"location"];
-    //[parameters setValue:term forKey:@"term"];
-    //[parameters setValue:@"San Francisco" forKey:@"location"];
     
-    
-    NSString* radius_filter = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
-    NSString* sort = [[NSUserDefaults standardUserDefaults] objectForKey:@"sort"];
+    NSString *radius_filter = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
+    NSString *sort = [[NSUserDefaults standardUserDefaults] objectForKey:@"sort"];
+    NSString *deals = [[NSUserDefaults standardUserDefaults] objectForKey:@"deals_filter"];
     NSLog(@"ns user def");
-    NSLog(@"%@", radius_filter);
-    if(sort != nil){
-        parametersDict[@"sort"] =  [NSString stringWithFormat:@"%@", sort ];
-    
+    NSLog(@"%@", deals);
+    if(sort != nil)
+        parametersDict[@"sort"] =  sort ; //[NSString stringWithFormat:@"%@", sort ];
+    if(deals != nil)
+        parametersDict[@"deals_filter"] =  deals ;
+    if(radius_filter != nil)
+    {
+        if([radius_filter  isEqual: @"Auto"])
+            radius_filter = @"500";
+        else
+            parametersDict[@"radius_filter"] = radius_filter; //[NSString stringWithFormat:@"%@", radius_filter ];
     }
     
-    //if(radius_filter != nil){
-    //    parametersDict[@"radius_filter"] =  [NSString stringWithFormat:@"%@", radius_filter ];
-        
-    //}
+    parametersDict[@"ll"] = @"37.788022,-122.399797"; //[NSString stringWithFormat:@"%@", radius_filter ];
     
-    //if(sort !=nil)
-    //    [parameters setValue:@"2" forKey:@"sort"];
-//    [parameters setValue:@"San Francisco" forKey:@"location"];
-   // NSDictionary *str =  [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
     
     return [self GET:@"search" parameters:parametersDict success:success failure:failure];
 }
