@@ -26,6 +26,8 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 @property (nonatomic, strong) UITextField *searchBox;
 @property YelpModel *yelpModel;
 @property NSUserDefaults *defaults;
+@property (strong, nonatomic) NSString *searchTerm;
+
 - (void)getBusinesses:(NSString *)searchTerm;
 @end
 
@@ -40,7 +42,7 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
         // You can register for Yelp API keys here: http://www.yelp.com/developers/manage_api_keys
         self.client = [[YelpClient alloc] initWithConsumerKey:kYelpConsumerKey consumerSecret:kYelpConsumerSecret accessToken:kYelpToken accessSecret:kYelpTokenSecret];
         
-        [self.client searchWithTerm:@"Thai" success:^(AFHTTPRequestOperation *operation, id response) {
+        [self.client searchWithTerm:@"thai" success:^(AFHTTPRequestOperation *operation, id response) {
             
             
             self.businesses = response[@"businesses"];
@@ -143,8 +145,11 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 - (void)viewWillAppear:(BOOL)animated{
     
     NSLog(@"view will appear");
+    self.searchTerm = [[NSUserDefaults standardUserDefaults] objectForKey:@"search_term"];
+    if(self.searchTerm == nil)
+        self.searchTerm = @"Thai";
 
-    [self.client searchWithTerm:@"Thai" success:^(AFHTTPRequestOperation *operation, id response) {
+    [self.client searchWithTerm:self.searchTerm success:^(AFHTTPRequestOperation *operation, id response) {
         
         
         self.businesses = response[@"businesses"];
@@ -161,6 +166,8 @@ NSString * const kYelpTokenSecret = @"mqtKIxMIR4iBtBPZCmCLEb-Dz3Y";
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSLog(@"You entered %@",self.searchBox.text);
+    
+    [self.defaults setValue:self.searchBox.text forKey:@"search_term"];
     [self.searchBox resignFirstResponder];
     [self getBusinesses:self.searchBox.text];
     return YES;

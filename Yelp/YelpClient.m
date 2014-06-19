@@ -35,7 +35,10 @@
     NSLog(@"ns user def");
     NSLog(@"%@", deals);
     if(sort != nil)
+    {
         parametersDict[@"sort"] =  sort ; //[NSString stringWithFormat:@"%@", sort ];
+        
+    }
     if(deals != nil)
         parametersDict[@"deals_filter"] =  deals ;
     if(radius_filter != nil)
@@ -47,7 +50,9 @@
     }
     
     parametersDict[@"ll"] = @"37.788022,-122.399797"; //[NSString stringWithFormat:@"%@", radius_filter ];
+    parametersDict[@"category_filter"] =@"foodtrucks";
     
+    //NSLog()
     
     return [self GET:@"search" parameters:parametersDict success:success failure:failure];
 }
