@@ -32,7 +32,7 @@
     NSString *radius_filter = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
     NSString *sort = [[NSUserDefaults standardUserDefaults] objectForKey:@"sort"];
     NSString *deals = [[NSUserDefaults standardUserDefaults] objectForKey:@"deals_filter"];
-    //NSString *categories = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_filter"];
+    NSString *categories = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_filter"];
     
     NSLog(@"ns user def");
     NSLog(@"%@", deals);
@@ -41,11 +41,11 @@
         parametersDict[@"sort"] =  sort ; //[NSString stringWithFormat:@"%@", sort ];
         
     }
-   // if(categories != nil)
-   // {
-   //     parametersDict[@"category_filter"] = categories;
+    if(categories != nil)
+    {
+        parametersDict[@"category_filter"] = categories;
         
-   // }
+    }
     if(deals != nil)
         parametersDict[@"deals_filter"] =  deals ;
     if(radius_filter != nil)
