@@ -32,6 +32,8 @@
     NSString *radius_filter = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
     NSString *sort = [[NSUserDefaults standardUserDefaults] objectForKey:@"sort"];
     NSString *deals = [[NSUserDefaults standardUserDefaults] objectForKey:@"deals_filter"];
+    //NSString *categories = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_filter"];
+    
     NSLog(@"ns user def");
     NSLog(@"%@", deals);
     if(sort != nil)
@@ -39,6 +41,11 @@
         parametersDict[@"sort"] =  sort ; //[NSString stringWithFormat:@"%@", sort ];
         
     }
+   // if(categories != nil)
+   // {
+   //     parametersDict[@"category_filter"] = categories;
+        
+   // }
     if(deals != nil)
         parametersDict[@"deals_filter"] =  deals ;
     if(radius_filter != nil)
@@ -50,7 +57,7 @@
     }
     
     parametersDict[@"ll"] = @"37.788022,-122.399797"; //[NSString stringWithFormat:@"%@", radius_filter ];
-    parametersDict[@"category_filter"] =@"foodtrucks";
+    //parametersDict[@"category_filter"] =@"foodtrucks";
     
     //NSLog()
     

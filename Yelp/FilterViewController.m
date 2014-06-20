@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSString *deals;
 @property (nonatomic, strong) NSString *radius;
 @property (nonatomic, strong) NSString *sort;
+@property (nonatomic, strong) NSMutableDictionary *categoryDict;
+
 
 
 
@@ -35,14 +37,30 @@
     }
     
     self.defaults = [NSUserDefaults standardUserDefaults];
+    self.categoryDict = [[NSMutableDictionary alloc] init];
     return self;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
     [self addCancelAndSearchButtons];
+    NSMutableDictionary *tempCategoryDict = [[NSMutableDictionary alloc]init];
+    
+    tempCategoryDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_dict"];
+    
+    if (tempCategoryDict != nil)
+    {
+        self.categoryDict = tempCategoryDict;
+        for (id key in tempCategoryDict) {
+            NSLog(@"key: %@, value: %@ \n", key, [tempCategoryDict objectForKey:key]);
+            //[categories appendFormat:@"%@,",[self.categoryDict objectForKey:key]];
+        }
+    }
+    
+
     
     self.deals = [[NSUserDefaults standardUserDefaults] objectForKey:@"deals_filter"];
     self.radius = [[NSUserDefaults standardUserDefaults] objectForKey:@"radius_filter"];
@@ -94,6 +112,22 @@
 
 - (void)searchClickEvent: (id) sender {
     NSLog(@"%@", @"Search Pressed");
+    
+    //for (NSString* key in self.categoryDict) {
+    //    id value = [self.categoryDict objectForKey:key];
+    //    NSLog(@"%@", value);
+    //}
+    NSMutableString *categories = [[NSMutableString alloc]init];
+    
+    for (id key in self.categoryDict) {
+        NSLog(@"key: %@, value: %@ \n", key, [self.categoryDict objectForKey:key]);
+        [categories appendFormat:@"%@,",[self.categoryDict objectForKey:key]];
+    }
+    [categories deleteCharactersInRange:NSMakeRange([categories length]-1, 1)];
+    NSLog(@"%@",categories);
+    
+    [self.defaults setObject:self.categoryDict forKey:@"category_dict"];
+    [self.defaults setValue:categories forKey:@"category_filter"];
     [self.defaults setValue:self.deals forKey:@"deals_filter"];
     [self.defaults setValue:self.radius forKey:@"radius_filter"];
     [self.defaults setValue:self.sort forKey:@"sort"];
@@ -129,7 +163,7 @@
     }
     else if (section == 3)
     {
-        return [self.collapsed[@(section)] boolValue] ? 1 : 1;
+        return [self.collapsed[@(section)] boolValue] ? 1 : 3;
     }
     else if (section == 4)
     {
@@ -288,9 +322,31 @@
     }
 
     
-    else if(indexPath.section == 3)
+    else// if(indexPath.section == 3)
     {
-        cell.textLabel.text = @"Meters";
+        //cell.textLabel.text = @"Meters";
+        if(indexPath.row == 0)
+        {
+            cell.textLabel.text = @"American";
+            //if([[[NSUserDefaults standardUserDefaults] objectForKey:@"sort"]  isEqual: @"0"])
+            if([self.categoryDict objectForKey:@"American"] != nil)
+                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+            
+        }
+        else if(indexPath.row == 1)
+        {
+            cell.textLabel.text = @"Indian";
+            if([self.categoryDict objectForKey:@"Indian"] != nil)
+                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+        }
+        else if(indexPath.row == 2)
+        {
+            cell.textLabel.text = @"Thai";
+            if([self.categoryDict objectForKey:@"Thai"] != nil)
+                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+            
+        }
+    
   
     }
     
@@ -324,7 +380,7 @@
     }
     else if (section == 3)
     {
-        sectionTitle = @"Radius";
+        sectionTitle = @"Category";
     }
     
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0,0,320,50)];
@@ -342,10 +398,14 @@
 
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"delect called");
+    if(!(indexPath.section == 3))
+    {
     NSUInteger index = [[tableView indexPathsForVisibleRows] indexOfObject:indexPath];
     if (index != NSNotFound) {
         UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
         [cell setAccessoryType:UITableViewCellAccessoryNone];
+    }
     }
 }
 
@@ -421,15 +481,65 @@
 
         if(indexPath.section == 3)
         {
-            //if (index != NSNotFound) {
+            NSLog(@"clicked");
+
+            
+                        //if (index != NSNotFound) {
                 UITableViewCell *cell = [[tableView visibleCells] objectAtIndex:index];
+                //UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+            
+                if(indexPath.row == 0)
+                {
+                    NSLog(@"clicked 0");
+                    if ([cell accessoryType] == UITableViewCellAccessoryNone) {
+                            [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                            //self.categoryAmerican = @"american";
+                            self.categoryDict[@"American"] = @"american";
+                        }
+                         else {
+                             [cell setAccessoryType:UITableViewCellAccessoryNone];
+                             //self.categoryAmerican = nil;
+                             [self.categoryDict removeObjectForKey:@"American"];
+                        }
+
+                }
+            if(indexPath.row == 1)
+            {
+                NSLog(@"clicked 1");
                 if ([cell accessoryType] == UITableViewCellAccessoryNone) {
                     [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
-                } else {
-                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                    
+                    //self.categoryIndian = @"indian";
+                    self.categoryDict[@"Indian"] = @"indian";
+                    //[self.categoryDict setObject:@"indian"  forKey:@"Indian"];
+                    
+                    NSString *str = [self.categoryDict objectForKey:@"Indian"];
+                    NSLog(@"%@", str);
                 }
-            //}
-            //return cell;
+                else {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                    //self.categoryIndian = nil;
+                    [self.categoryDict removeObjectForKey:@"Indian"];
+                }
+            }
+            
+            if(indexPath.row == 2)
+            {
+                NSLog(@"clicked 2");
+                if ([cell accessoryType] == UITableViewCellAccessoryNone) {
+                    [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                    //self.categoryThai = @"thai";
+                    self.categoryDict[@"Thai"] = @"thai";
+                }
+                else {
+                    [cell setAccessoryType:UITableViewCellAccessoryNone];
+                    //self.categoryThai = nil;
+                    [self.categoryDict removeObjectForKey:@"Thai"];
+                }
+
+                
+            }
+            
         }
 
 }
