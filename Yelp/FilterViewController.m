@@ -47,9 +47,10 @@
     
     // Do any additional setup after loading the view from its nib.
     [self addCancelAndSearchButtons];
-    NSMutableDictionary *tempCategoryDict = [[NSMutableDictionary alloc]init];
+    //NSMutableDictionary *tempCategoryDict = [[NSMutableDictionary alloc]init];
+    NSMutableDictionary* tempCategoryDict = [[self.defaults objectForKey:@"category_dict"] mutableCopy];
     
-    tempCategoryDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_dict"];
+    //tempCategoryDict = [[NSUserDefaults standardUserDefaults] objectForKey:@"category_dict"];
     
     if (tempCategoryDict != nil)
     {
