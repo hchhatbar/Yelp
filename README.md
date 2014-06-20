@@ -13,4 +13,4 @@ Time Spent: 30+ hours
  * Categories - not implemented
  * Search from filter page implemented, however Cancel not functioning as expected - will need another hour to fix it.
  	 
-![Alt text](https://raw.githubusercontent.com/hchhatbar/Yelp/master/Yelp/yelp.gif "Yelp")
+![Alt text](https://raw.githubusercontent.com/hchhatbar/Yelp/master/Yelp/yelp_gif.gif "Yelp")
